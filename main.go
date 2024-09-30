@@ -55,7 +55,7 @@ func checkAvailableDate() (string, error) {
 	user_id_selector := `#userId`
 	password_selector := `#userPasswd`
 	submit_button_selector := `#loginForm > div > div.form_box > div.login_button > a`
-	application_of_sojourn_link := `#content > div.section_content > div > div.grp_content > div > table > tbody > tr > td:nth-child(3) > a`
+	// application_of_sojourn_link := `#content > div.section_content > div > div.grp_content > div > table > tbody > tr > td:nth-child(3) > a`
 	edit_button_selector := `#btn_updateResv`
 	date_button_selector := `#resvYmdSelect`
 	date_input_selector := `#resvYmd`
@@ -77,8 +77,12 @@ func checkAvailableDate() (string, error) {
 		chromedp.Click(submit_button_selector, chromedp.ByQuery),
 		chromedp.WaitVisible(logged_in_selector, chromedp.ByQuery),
 		chromedp.Navigate(`https://www.hikorea.go.kr/mypage/MypgResvPageR.pt#`),
-		chromedp.WaitVisible(application_of_sojourn_link, chromedp.ByQuery),
-		chromedp.Click(application_of_sojourn_link, chromedp.ByQuery),
+		// Wait for the table to be visible
+		chromedp.WaitVisible(`.grp_table`, chromedp.ByQuery),
+		// Find the last row with Process Status "Reserved" and click the Number link
+		chromedp.Click(`//tr[td[contains(text(), '예약')]][last()]/td[1]/a`, chromedp.BySearch),
+		// chromedp.WaitVisible(application_of_sojourn_link, chromedp.ByQuery),
+		// chromedp.Click(application_of_sojourn_link, chromedp.ByQuery),
 		chromedp.WaitVisible(edit_button_selector, chromedp.ByQuery),
 		chromedp.Click(edit_button_selector, chromedp.ByQuery),
 		chromedp.Value(date_input_selector, &dateValue, chromedp.ByQuery),
